@@ -1,0 +1,5 @@
+.env
+.vscode
+repos
+*__pycache__
+src/ast_tree/grammars
