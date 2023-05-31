@@ -13,7 +13,7 @@ repo_name =  "cassandra"
 remote_repo_path = "https://github.com/apache/{}.git".format(repo_name)
 commits = Repository(remote_repo_path, since=start_date, to=end_date, only_no_merge = True,
                      only_modifications_with_file_types=['.py'], only_in_branch='trunk').traverse_commits()
-print("staring mining ", repo_name)
+print("starting mining ", repo_name)
 #'/scratch/danielrc/dataset_extractor/repos/{}'.format(repo_name)
 # repo: the owner/repo
 # path: the full path to the original file
