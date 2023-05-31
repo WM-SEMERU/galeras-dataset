@@ -2,6 +2,7 @@ from pydriller import Repository
 from datetime import datetime
 import re
 import json
+import os
 
 import ast_tree
 from tree_sitter import Language, Parser
@@ -134,8 +135,11 @@ def split_code_docstring(original_code):
 
 
 save_path = "/nfs/semeru/semeru_datasets/custom_dataset_ast/{}/{}"
+save_path1 = "/nfs/semeru/semeru_datasets/custom_dataset_ast/{}"
 
 def save(name, data):
+    if not os.path.exists(save_path1.format(repo_name)):
+        os.mkdir(save_path1.format(repo_name))
     with open(save_path.format(repo_name,name), 'w') as f:
         print("saving data")
         json.dump(data, f, ensure_ascii=False, indent=4)
