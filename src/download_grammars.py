@@ -5,6 +5,7 @@ from tree_sitter import Language
 import ast_tree
 
 _GRAMMARs = {
+    "java": ("https://github.com/tree-sitter/tree-sitter-java.git", "tree-sitter-java", "v0.20.0"),
     "python": ("https://github.com/tree-sitter/tree-sitter-python.git", "tree-sitter-python", "v0.20.0"),
 }
 
@@ -37,4 +38,4 @@ def download_grammars(
         langs
     )
 
-download_grammars(["python"])
+download_grammars(["java"])
