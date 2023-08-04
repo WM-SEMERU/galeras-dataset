@@ -13,12 +13,13 @@ start_date = datetime(2022, 1, 1, 0, 0, 0)
 end_date = datetime(2023, 1, 1, 0, 0, 0)
 
 # Then query for Python repositories sorted by stars and exclude forks
-query = 'language:Python fork:false size:>=30000 pushed:>2021-12-31 stars:>1000'
+query = 'language:Python fork:false pushed:>2021-12-31 stars:>1000 org:facebook'
+#'language:Python fork:false size:>=30000 pushed:>2021-12-31 stars:>2000'
 
-repos = list_all_repos.get_all_repos(query, 100)
+repos = list_all_repos.get_all_repos(query, 200)
 methods = ()
-save_path = "/nfs/semeru/semeru_datasets/galeras_filtered_raw/{}/{}"
-save_path1 = "/nfs/semeru/semeru_datasets/galeras_filtered_raw/{}"
+save_path = "/nfs/semeru/semeru_datasets/galeras_curated_raw_V3/{}/{}"
+save_path1 = "/nfs/semeru/semeru_datasets/galeras_curated_raw_V3/{}"
 
 
 #'/scratch/danielrc/dataset_extractor/repos/{}'.format(repo_name)
@@ -49,7 +50,7 @@ class TreeSitterManager():
 
     def get_ast_errors_and_deep(self, code):
         node_tree = self.parser.parse(bytes(code, "utf8"))
-        return self.__detect_ast_errors_and_deep(node_tree.root_node)
+        return self.__detect_ast_errors_and_deep(node_tree.root_node, set())
 
     def __detect_ast_errors_and_deep(self, node_root, identifier_set = set(), level=0, max_level=0, count = 0):
         """Traverses the tree catch errors and evaluate tree levels"""
