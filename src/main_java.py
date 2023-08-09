@@ -13,14 +13,13 @@ start_date = datetime(1900, 1, 1, 0, 0, 0)
 end_date = datetime(2023, 1, 1, 0, 0, 0)
 
 # Then query for Python repositories sorted by stars and exclude forks
-query = 'language:Java fork:false org:openhab'
+query = 'language:Java fork:false stars:>1000'
 #'language:Python fork:false size:>=30000 pushed:>2021-12-31 stars:>2000'
 
 repos = list_all_repos.get_all_repos(query, 200)
 methods = ()
-save_path = "/nfs/semeru/semeru_datasets/IoT/openhab/{}/{}"
-save_path1 = "/nfs/semeru/semeru_datasets/IoT/openhab/{}"
-
+save_path = "/nfs/semeru/semeru_datasets/semeru/{}/{}"
+save_path1 = "/nfs/semeru/semeru_datasets/semeru/{}"
 
 #'/scratch/danielrc/dataset_extractor/repos/{}'.format(repo_name)
 # repo: the owner/repo
@@ -142,28 +141,32 @@ class GithubMiningManager():
                 "n_identifiers": len(identifiers)
                 }
 
+    # Python method
+    # def split_code_docstring(self,original_code):
+    #     regex = "(\"\"\"|\'\'\')"
+    #     if re.search(regex, original_code) is None:
+    #         return None, original_code
+    #     split = re.split(regex, original_code)
+    #     code = ""
+    #     doc_string = ""
+    #     is_doc = False
+    #     for text in split:
+    #         is_comment = re.search(regex, text) is not None
+    #         is_doc = is_comment != is_doc
+    #         if is_comment:
+    #             continue
+    #         if is_doc:
+    #             doc_string = doc_string + re.sub(regex, "", text)
+    #         else:
+    #             code = code + text
 
-    def split_code_docstring(self,original_code):
-        regex = "(\"\"\"|\'\'\')"
-        if re.search(regex, original_code) is None:
-            return None, original_code
-        split = re.split(regex, original_code)
-        code = ""
-        doc_string = ""
-        is_doc = False
-        for text in split:
-            is_comment = re.search(regex, text) is not None
-            is_doc = is_comment != is_doc
-            if is_comment:
-                continue
-            if is_doc:
-                doc_string = doc_string + re.sub(regex, "", text)
-            else:
-                code = code + text
+    #     return doc_string, code
 
-        return doc_string, code
-
-
+    def split_code_docstring(self, original_code):
+        regex = "\*\*(?:[^*]|(?:\*+(?:[^*\/])))*\*+"
+        doc_string = re.findall(regex, original_code)
+        code = re.sub(regex, '', original_code)
+        return doc_string[0], code
 
 
     def save(self, name, data):           
@@ -192,7 +195,7 @@ class GithubMiningManager():
             for commit in commits:
                 
                 for file in commit.modified_files:
-                    if not file.filename.endswith('.py'):
+                    if not file.filename.endswith('.java'):
                         continue
                     methods = self.extract_methods(file.source_code, file.changed_methods)
                     if methods is None:
