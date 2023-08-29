@@ -78,7 +78,7 @@ class GithubMiningManager():
         self.ast_error_detector = TreeSitterManager("java")
         self.repo_name = repo_name
 
-    def extract_methods(self,source_code, methods):
+    def extract_methods(self, source_code, methods):
         regex = r"class |void |static " #r"(\n(\s{4})*)(def |class |async |    @[a-zA-Z]*)"  # r"\n(def |[ {4}]*def |class |    @[a-zA-Z]*)"
         if source_code is None:
             return
@@ -163,11 +163,12 @@ class GithubMiningManager():
     #     return doc_string, code
 
     def split_code_docstring(self, original_code):
-        regex = "\*\*(?:[^*]|(?:\*+(?:[^*\/])))*\*+"
-        doc_string = re.findall(regex, original_code)
-        code = re.sub(regex, '', original_code)
-        return doc_string[0], code
-
+        regex = r'\*\*(.*?)\*\/'
+        comments = re.findall(regex, original_code, re.S)
+        for comment in comments:
+            code = original_code.replace("/**" + comment + "*/", "")
+        doc_string = ' '.join(comments)
+        return doc_string, code
 
     def save(self, name, data):           
         if not os.path.exists(save_path1.format(self.repo_name)):
@@ -234,4 +235,4 @@ for repo in repos:
 #save("data_{}.json".format(str(data_files)), json_list)
 
 
-##git config --global -add safe.directory
+#git config --global -add safe.directory
